@@ -19,3 +19,11 @@ msgstr "Allows you to control departments."
 msgctxt "Languages::departments_menu_description"
 msgid "Allows you to control departments."
 msgstr "Allows you to control departments."
+
+msgctxt "Languages::department"
+msgid "Department"
+msgstr "Department"
+
+msgctxt "Languages::add_department"
+msgid "Add department"
+msgstr "Add department"

@@ -8,5 +8,49 @@
    <has_icon>Y</has_icon>
    <default_language>en</default_language>
    <auto_install>MULTIVENDOR,ULTIMATE</auto_install>
-
+   <queries>
+      <item for="install">DROP TABLE IF EXISTS ?:departments;</item>
+      <item for="install">DROP TABLE IF EXISTS ?:department_names;</item>
+      <item for="install">DROP TABLE IF EXISTS ?:department_descriptions;</item>
+      <item for="install">DROP TABLE IF EXISTS ?:department_employee;</item>
+      <item for="install">
+         CREATE TABLE `?:departments` (
+            `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `supervisor_id` MEDIUMINT UNSIGNED NOT NULL,
+            `status` char(1) NOT NULL DEFAULT 'A',
+            PRIMARY KEY (`department_id`)
+         ) Engine=MyISAM DEFAULT CHARSET UTF8;
+      </item>
+      <item for="install">
+         CREATE TABLE `?:department_names` (
+            `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `name_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `lang_code` CHAR(2) NOT NULL DEFAULT '',
+            `name`  varchar(128) NOT NULL DEFAULT '',
+            KEY(department_id),
+            PRIMARY KEY (`name_id`)
+         ) Engine=MyISAM DEFAULT CHARSET UTF8;
+      </item>
+      <item for="install">
+         CREATE TABLE `?:department_descriptions` (
+            `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `description_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `lang_code` CHAR(2) NOT NULL DEFAULT '',
+            `description`  varchar(128) NOT NULL DEFAULT '',
+            KEY(department_id),
+            PRIMARY KEY (`description_id`)
+         ) Engine=MyISAM DEFAULT CHARSET UTF8;
+      </item>
+      <item for="install">
+         CREATE TABLE `?:department_employee` (
+            `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `user_id` MEDIUMINT UNSIGNED NOT NULL,
+            PRIMARY KEY (`department_id`, `user_id`)
+         ) Engine=MyISAM DEFAULT CHARSET UTF8;
+      </item>
+      <item for="uninstall">DROP TABLE IF EXISTS ?:departments;</item>
+      <item for="uninstall">DROP TABLE IF EXISTS ?:department_names;</item>
+      <item for="uninstall">DROP TABLE IF EXISTS ?:department_descriptions;</item>
+      <item for="uninstall">DROP TABLE IF EXISTS ?:department_employee;</item>
+ </queries>
 </addon>
