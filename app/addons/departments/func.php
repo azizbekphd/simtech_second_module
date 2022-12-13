@@ -12,3 +12,54 @@
 if ( !defined('BOOTSTRAP') ) { die('Access denied'); }
 
 use Tygh\Registry;
+
+function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $items_per_page = 0)
+{
+    $default_params = array(
+        'page' => 1,
+        'items' => $items_per_page
+    );
+
+    $params = array_merge($default_params, $params);
+
+    $sortings = array(
+        'timestamp' => '?:departments.timestamp',
+        'name' => '?:department_names.name',
+        'description' => '?:department_description.description',
+        'status' => '?:departments.status',
+    );
+
+    $condition = $limit = $join = '';
+
+    if (!empty($params['limit'])) {
+        $limit = db_quote(' LIMIT 0, ?i', $params['limit']);
+    }
+
+    $sorting = db_sort($params, $sortings, 'name', 'asc');
+
+    $fields = array (
+        '?:departments.department_id',
+        '?:departments.supervisor_id',
+        '?:departments.status',
+        '?:departments.timestamp',
+        '?:department_names.name',
+        '?:department_descriptions.description',
+    );
+
+    $join .= db_quote(' LEFT JOIN ?:department_names ON ?:department_names.name_id = ?:departments.department_id AND ?:department_names.lang_code = ?s', $lang_code);
+    $join .= db_quote(' LEFT JOIN ?:department_descriptions ON ?:department_descriptions.department_id = ?:departments.department_id AND ?:department_descriptions.lang_code = ?s', $lang_code);
+
+    if (!empty($params['items_per_page'])) {
+        $params['total_items'] = db_get_field("SELECT COUNT(*) FROM ?:departments $join WHERE 1 $condition");
+        $limit = db_paginate($params['page'], $params['items_per_page'], $params['total_items']);
+    }
+
+    $departments = db_get_hash_array(
+        "SELECT ?p FROM ?:departments " .
+        $join .
+        "WHERE 1 ?p ?p ?p",
+        'department_id', implode(', ', $fields), $condition, $sorting, $limit
+    );
+
+    return array($departments, $params);
+}
