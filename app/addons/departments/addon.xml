@@ -17,6 +17,8 @@
          CREATE TABLE `?:departments` (
             `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
             `supervisor_id` MEDIUMINT UNSIGNED NOT NULL,
+            `timestamp` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+            `upd_timestamp` INT(11) UNSIGNED NOT NULL DEFAULT 0,
             `status` char(1) NOT NULL DEFAULT 'A',
             PRIMARY KEY (`department_id`)
          ) Engine=MyISAM DEFAULT CHARSET UTF8;
@@ -43,9 +45,12 @@
       </item>
       <item for="install">
          CREATE TABLE `?:department_employee` (
+            `department_employee_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
             `department_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
             `user_id` MEDIUMINT UNSIGNED NOT NULL,
-            PRIMARY KEY (`department_id`, `user_id`)
+            KEY (`department_id`),
+            KEY (`user_id`),
+            PRIMARY KEY (`department_employee_id`)
          ) Engine=MyISAM DEFAULT CHARSET UTF8;
       </item>
       <item for="uninstall">DROP TABLE IF EXISTS ?:departments;</item>
