@@ -17,10 +17,14 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
 {
     $default_params = array(
         'page' => 1,
-        'items' => $items_per_page
+        'items_per_page' => $items_per_page
     );
 
     $params = array_merge($default_params, $params);
+
+    if (AREA == 'C') {
+        $params['status'] = 'A';
+    }
 
     $sortings = array(
         'timestamp' => '?:departments.timestamp',
@@ -36,6 +40,14 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
     }
 
     $sorting = db_sort($params, $sortings, 'name', 'asc');
+
+    if (!empty($params['name'])) {
+        $condition .= db_quote(' AND ?:department_names.name LIKE ?l', '%' . trim($params['name']) . '%');
+    }
+
+    if (!empty($params['status'])) {
+        $condition .= db_quote(' AND ?:departments.status = ?s', $params['status']);
+    }
 
     $fields = array (
         '?:departments.department_id',
