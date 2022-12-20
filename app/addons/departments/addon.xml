@@ -53,9 +53,19 @@
             PRIMARY KEY (`department_employee_id`)
          ) Engine=MyISAM DEFAULT CHARSET UTF8;
       </item>
+      <item>
+          CREATE TABLE `?:department_images` (
+          `department_image_id` mediumint(8) unsigned NOT NULL auto_increment,
+          `department_id` mediumint(8) unsigned NOT NULL default 0,
+          `lang_code` char(2) NOT NULL default '',
+          PRIMARY KEY  (`department_image_id`),
+          UNIQUE KEY  `department` (`department_id`,`lang_code`)
+          ) Engine=MyISAM DEFAULT CHARSET UTF8;
+      </item>
       <item for="uninstall">DROP TABLE IF EXISTS ?:departments;</item>
       <item for="uninstall">DROP TABLE IF EXISTS ?:department_names;</item>
       <item for="uninstall">DROP TABLE IF EXISTS ?:department_descriptions;</item>
       <item for="uninstall">DROP TABLE IF EXISTS ?:department_employee;</item>
+      <item for="uninstall">DROP TABLE IF EXISTS ?:department_images;</item>
  </queries>
 </addon>
