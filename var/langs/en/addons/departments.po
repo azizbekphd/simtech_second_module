@@ -27,3 +27,23 @@ msgstr "Department"
 msgctxt "Languages::add_department"
 msgid "Add department"
 msgstr "Add department"
+
+msgctxt "Languages::departments.new_department"
+msgid "New department"
+msgstr "New department"
+
+msgctxt "Languages::departments.supervisor"
+msgid "Supervisor"
+msgstr "Supervisor"
+
+msgctxt "Languages::departments.select_supervisor"
+msgid "Select supervisor"
+msgstr "Select supervisor"
+
+msgctxt "Languages::departments.employees"
+msgid "Employees"
+msgstr "Employees"
+
+msgctxt "Languages::departments.add_employees"
+msgid "Add employees"
+msgstr "Add employees"
