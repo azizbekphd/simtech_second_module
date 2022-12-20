@@ -47,15 +47,14 @@
 
                                 <td width="8%" class="departments-list__image left">
                                     {include
-                                                        file="common/image.tpl"
-                                                        image=$department.main_pair.icon|default:$department.main_pair.detailed
-                                                        image_id=$departments.main_pair.image_id
-                                                        image_width=$image_width
-                                                        image_height=$image_height
-                                                        href="departments.update?product_id=`$department.department_id`"|fn_url
-                                                        image_css_class="departments-list__image--img"
-                                                        link_css_class="departments-list__image--link"
-                                                    }
+                                        file="common/image.tpl"
+                                        image=$department.main_pair.icon|default:$department.main_pair.detailed
+                                        image_id=$departments.main_pair.image_id
+                                        image_width=$image_width
+                                        image_height=$image_height
+                                        href="departments.update?product_id=`$department.department_id`"|fn_url
+                                        image_css_class="departments-list__image--img"
+                                        link_css_class="departments-list__image--link"}
                                 </td>
                                 <td data-th="{__("name")}">
                                     {$department.name}
