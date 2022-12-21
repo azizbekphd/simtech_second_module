@@ -145,9 +145,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 {
     SecurityHelper::sanitizeObjectData('logos', $data);
 
-    if (isset($data['timestamp'])) {
-        $data['timestamp'] = fn_parse_date($data['timestamp']);
-    }
+    $data['upd_timestamp'] = TIME;
 
     $data['localization'] = empty($data['localization']) ? '' : fn_implode_localizations($data['localization']);
 
