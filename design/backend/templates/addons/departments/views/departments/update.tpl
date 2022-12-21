@@ -33,7 +33,7 @@
                 <div class="controls">
                     {include file="common/attach_images.tpl"
                         image_name="departments_main"
-                        image_object_type="promo"
+                        image_object_type="logos"
                         image_pair=$department.main_pair
                         image_object_id=$id
                         no_detailed=true
@@ -57,9 +57,11 @@
                         data_id="elm_department_supervisor"
                         input_name="department_data[supervisor_id]"
                         item_ids=[$department.supervisor_id]
+                        user_info=$department.supervisor_data
                         but_text=__("departments.select_supervisor")
                         display="radio"
-                        extra_url="&exclude_user_types[]=C"}
+                        view_mode="single_button"
+                        extra_url="&for_departments=&exclude_user_types[]=C"}
                 </div>
             </div>
 
@@ -69,9 +71,9 @@
                     {include file="pickers/users/picker.tpl"
                         data_id="elm_department_employees"
                         input_name="department_data[department_employee_id]"
-                        item_ids=$department.department_employee_id
+                        item_ids=$department.employee_ids
                         but_text=__("departments.add_employees")
-                        extra_url="&exclude_user_types[]=A&exclude_user_types[]=V"}
+                        extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"}
                 </div>
             </div>
 
