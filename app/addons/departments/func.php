@@ -58,10 +58,12 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
         '?:departments.timestamp',
         '?:department_names.name',
         '?:department_descriptions.description',
+        '?:department_images.department_image_id',
     );
 
     $join .= db_quote(' LEFT JOIN ?:department_names ON ?:department_names.name_id = ?:departments.department_id AND ?:department_names.lang_code = ?s', $lang_code);
     $join .= db_quote(' LEFT JOIN ?:department_descriptions ON ?:department_descriptions.department_id = ?:departments.department_id AND ?:department_descriptions.lang_code = ?s', $lang_code);
+    $join .= db_quote(' LEFT JOIN ?:department_images ON ?:department_images.department_id = ?:departments.department_id AND ?:department_images.lang_code = ?s', $lang_code);
 
     if (!empty($params['items_per_page'])) {
         $params['total_items'] = db_get_field("SELECT COUNT(*) FROM ?:departments $join WHERE 1 $condition");
@@ -74,6 +76,12 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
         "WHERE 1 ?p ?p ?p",
         'department_id', implode(', ', $fields), $condition, $sorting, $limit
     );
+
+    if (!empty($departments)) {
+        foreach ($departments as &$department) {
+            $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'logos', 'M', true, false, $lang_code);
+        }
+    }
 
     return array($departments, $params);
 }
@@ -100,18 +108,17 @@ function fn_get_department_data($department_id, $lang_code = CART_LANGUAGE)
 
     $joins[] = db_quote("LEFT JOIN ?:department_names ON ?:department_names.department_id = ?:departments.department_id AND ?:department_names.lang_code = ?s", $lang_code);
     $joins[] = db_quote("LEFT JOIN ?:department_descriptions ON ?:department_descriptions.department_id = ?:departments.department_id AND ?:department_descriptions.lang_code = ?s", $lang_code);
-    $joins[] = db_quote("LEFT JOIN ?:department_employee ON ?:department_employee.department_id = ?:departments.department_id");
     $joins[] = db_quote("LEFT JOIN ?:department_images ON ?:department_images.department_id = ?:departments.department_id AND ?:department_images.lang_code = ?s", $lang_code);
 
     $condition = db_quote("WHERE ?:departments.department_id = ?i", $department_id);
-    $condition .= (AREA == 'A') ? '' : " AND ?:departments.status IN ('A', 'H') ";
 
     $department = db_get_row("SELECT " . implode(", ", $fields) . " FROM ?:departments " . implode(" ", $joins) ." $condition");
 
     if (!empty($department)) {
-        $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'promo', 'M', true, false, $lang_code);
+        $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'logos', 'M', true, false, $lang_code);
+        $department['supervisor_data'] = !empty($department['supervisor_id']) ? fn_get_user_short_info($department['supervisor_id']) : [];
+        $department['employee_ids'] = array_keys(fn_get_department_employees($department['department_id']));
     }
-
 
     return $department;
 }
@@ -136,7 +143,7 @@ function fn_departments_need_image_update()
 
 function fn_departments_update_department($data, $department_id, $lang_code = DESCR_SL)
 {
-    SecurityHelper::sanitizeObjectData('department', $data);
+    SecurityHelper::sanitizeObjectData('logos', $data);
 
     if (isset($data['timestamp'])) {
         $data['timestamp'] = fn_parse_date($data['timestamp']);
@@ -146,6 +153,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 
     if (!empty($department_id)) {
         db_query("UPDATE ?:departments SET ?u WHERE department_id = ?i", $data, $department_id);
+        db_query("UPDATE ?:department_names SET ?u WHERE department_id = ?i AND lang_code = ?s", $data, $department_id, $lang_code);
         db_query("UPDATE ?:department_descriptions SET ?u WHERE department_id = ?i AND lang_code = ?s", $data, $department_id, $lang_code);
 
         $department_image_id = fn_get_department_image_id($department_id, $lang_code);
@@ -155,7 +163,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 
         if ($department_is_multilang) {
             if ($department_image_exist && $image_is_update) {
-                fn_delete_image_pairs($department_image_id, 'promo');
+                fn_delete_image_pairs($department_image_id, 'logos');
                 db_query("DELETE FROM ?:department_images WHERE department_id = ?i AND lang_code = ?s", $department_id, $lang_code);
                 $department_image_exist = false;
             }
@@ -168,7 +176,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
         if ($image_is_update && !$department_image_exist) {
             $department_image_id = db_query("INSERT INTO ?:department_images (department_id, lang_code) VALUE(?i, ?s)", $department_id, $lang_code);
         }
-        $pair_data = fn_attach_image_pairs('departments_main', 'promo', $department_image_id, $lang_code);
+        $pair_data = fn_attach_image_pairs('departments_main', 'logos', $department_image_id, $lang_code);
 
         if (!$department_is_multilang && !$department_image_exist) {
             fn_departments_image_all_links($department_id, $pair_data, $lang_code);
@@ -183,7 +191,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 
         if (fn_departments_need_image_update()) {
             $department_image_id = db_get_next_auto_increment_id('department_images');
-            $pair_data = fn_attach_image_pairs('departments_main', 'promo', $department_image_id, $lang_code);
+            $pair_data = fn_attach_image_pairs('departments_main', 'logos', $department_image_id, $lang_code);
             if (!empty($pair_data)) {
                 $data_department_image = array(
                     'department_image_id' => $department_image_id,
@@ -218,4 +226,15 @@ function fn_departments_image_all_links($department_id, $pair_data, $main_lang_c
 function fn_get_department_image_id($department_id, $lang_code = DESCR_SL)
 {
     return db_get_field("SELECT department_image_id FROM ?:department_images WHERE department_id = ?i AND lang_code = ?s", $department_id, $lang_code);
+}
+
+function fn_get_department_employees($department_id)
+{
+    $condition = db_quote("AND department_id = ?i", $department_id);
+
+    return db_get_hash_array(
+        "SELECT ?p FROM ?:department_employee " .
+        "WHERE 1 ?p",
+        'user_id', "?:department_employee.user_id", $condition
+    );
 }
