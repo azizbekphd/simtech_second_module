@@ -52,7 +52,7 @@
                                         image_id=$departments.main_pair.image_id
                                         image_width=$image_width
                                         image_height=$image_height
-                                        href="departments.update?product_id=`$department.department_id`"|fn_url
+                                        href="departments.update?department_id=`$department.department_id`"|fn_url
                                         image_css_class="departments-list__image--img"
                                         link_css_class="departments-list__image--link"}
                                 </td>
