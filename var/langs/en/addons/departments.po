@@ -47,3 +47,7 @@ msgstr "Employees"
 msgctxt "Languages::departments.add_employees"
 msgid "Add employees"
 msgstr "Add employees"
+
+msgctxt "Languages::departments.upd_date"
+msgid "Update date"
+msgstr "Update date"

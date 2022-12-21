@@ -77,21 +77,28 @@
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="elm_department_timestamp_{$id}">{__("creation_date")}</label>
-                <div class="controls readonly">
-                    {include file="common/calendar.tpl"
-                        date_id="elm_department_timestamp_`$id`"
-                        date_name="department_data[timestamp]"
-                        date_val=$department.timestamp|default:$smarty.const.TIME
-                        start_year=$settings.Company.company_start_year}
-                </div>
-            </div>
-
             {include file="views/localizations/components/select.tpl" data_name="department_data[localization]" data_from=$department.localization}
 
             {include file="common/select_status.tpl" input_name="department_data[status]" id="elm_department_status" obj_id=$id obj=$department hidden=true}
             {/hook}
+
+            <div class="control-group">
+                <label class="control-label" for="elm_department_timestamp_{$id}">{__("creation_date")}</label>
+                <div class="controls readonly">
+                    <p>
+                        {$department.timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
+                    </p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="elm_department_timestamp_{$id}">{__("departments.upd_date")}</label>
+                <div class="controls readonly">
+                    <p>
+                        {$department.upd_timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
+                    </p>
+                </div>
+            </div>
             <!--content_general-->
         </div>
 
