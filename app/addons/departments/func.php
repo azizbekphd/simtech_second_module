@@ -155,6 +155,25 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
         db_query("UPDATE ?:departments SET ?u WHERE department_id = ?i", $data, $department_id);
         db_query("UPDATE ?:department_names SET ?u WHERE department_id = ?i AND lang_code = ?s", $data, $department_id, $lang_code);
         db_query("UPDATE ?:department_descriptions SET ?u WHERE department_id = ?i AND lang_code = ?s", $data, $department_id, $lang_code);
+        
+        $department_employee_ids = explode(",", $data["employee_ids"]);
+        db_query("DELETE FROM ?:department_employee WHERE department_id = ?i AND user_id NOT IN (?n)", $department_id, $department_employee_ids);
+        $existing_employees = db_get_array("SELECT user_id FROM ?:department_employee WHERE department_id = ?i", $department_id);
+        $existing_employee_ids = [];
+        foreach ($existing_employees as $employee) {
+            $existing_employee_ids[] = $employee["id"];
+        }
+        $new_department_employees = [];
+        foreach ($department_employee_ids as $employee_id) {
+            if (in_array($employee_id, $existing_employee_ids)) continue;
+            $new_department_employees[] = [
+                "user_id" => $employee_id,
+                "department_id" => $department_id,
+            ];
+        }
+        if (!empty($new_department_employees)) {
+            db_query("INSERT INTO ?:department_employee ?m ", $new_department_employees);
+        }
 
         $department_image_id = fn_get_department_image_id($department_id, $lang_code);
         $department_image_exist = !empty($department_image_id);
