@@ -70,7 +70,7 @@
                 <div class="controls readonly">
                     {include file="pickers/users/picker.tpl"
                         data_id="elm_department_employees"
-                        input_name="department_data[department_employee_id]"
+                        input_name="department_data[employee_ids]"
                         item_ids=$department.employee_ids
                         but_text=__("departments.add_employees")
                         extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"}
