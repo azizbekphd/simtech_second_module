@@ -32,13 +32,13 @@
                 <label class="control-label">{__("image")}</label>
                 <div class="controls">
                     {include file="common/attach_images.tpl"
-                        image_name="departments_main"
-                        image_object_type="logos"
-                        image_pair=$department.main_pair
-                        image_object_id=$id
-                        no_detailed=true
-                        hide_titles=true
-                    }
+                            image_name="departments_main"
+                            image_object_type="logos"
+                            image_pair=$department.main_pair
+                            image_object_id=$id
+                            no_detailed=true
+                            hide_titles=true
+                        }
                 </div>
             </div>
 
@@ -54,14 +54,14 @@
                 <label class="control-label" for="elm_department_supervisor">{__("departments.supervisor")}</label>
                 <div class="controls readonly">
                     {include file="pickers/users/picker.tpl"
-                        data_id="elm_department_supervisor"
-                        input_name="department_data[supervisor_id]"
-                        item_ids=[$department.supervisor_id]
-                        user_info=$department.supervisor_data
-                        but_text=__("departments.select_supervisor")
-                        display="radio"
-                        view_mode="single_button"
-                        extra_url="&for_departments=&exclude_user_types[]=C"}
+                            data_id="elm_department_supervisor"
+                            input_name="department_data[supervisor_id]"
+                            item_ids=[$department.supervisor_id]
+                            user_info=$department.supervisor_data
+                            but_text=__("departments.select_supervisor")
+                            display="radio"
+                            view_mode="single_button"
+                            extra_url="&for_departments=&exclude_user_types[]=C"}
                 </div>
             </div>
 
@@ -69,11 +69,11 @@
                 <label class="control-label" for="elm_department_employees">{__("departments.employees")}</label>
                 <div class="controls readonly">
                     {include file="pickers/users/picker.tpl"
-                        data_id="elm_department_employees"
-                        input_name="department_data[employee_ids]"
-                        item_ids=$department.employee_ids
-                        but_text=__("departments.add_employees")
-                        extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"}
+                            data_id="elm_department_employees"
+                            input_name="department_data[employee_ids]"
+                            item_ids=$department.employee_ids
+                            but_text=__("departments.add_employees")
+                            extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"}
                 </div>
             </div>
 
@@ -82,23 +82,25 @@
             {include file="common/select_status.tpl" input_name="department_data[status]" id="elm_department_status" obj_id=$id obj=$department hidden=true}
             {/hook}
 
-            <div class="control-group">
-                <label class="control-label" for="elm_department_timestamp_{$id}">{__("creation_date")}</label>
-                <div class="controls readonly">
-                    <p>
-                        {$department.timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
-                    </p>
+            {if $id}
+                <div class="control-group">
+                    <label class="control-label" for="elm_department_timestamp_{$id}">{__("creation_date")}</label>
+                    <div class="controls readonly">
+                        <p>
+                            {$department.timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label" for="elm_department_timestamp_{$id}">{__("departments.upd_date")}</label>
-                <div class="controls readonly">
-                    <p>
-                        {$department.upd_timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
-                    </p>
+                <div class="control-group">
+                    <label class="control-label" for="elm_department_timestamp_{$id}">{__("departments.upd_date")}</label>
+                    <div class="controls readonly">
+                        <p>
+                            {$department.upd_timestamp|date_format:"`$settings.Appearance.date_format`, `$settings.Appearance.time_format`"}
+                        </p>
+                    </div>
                 </div>
-            </div>
+            {/if}
             <!--content_general-->
         </div>
 
