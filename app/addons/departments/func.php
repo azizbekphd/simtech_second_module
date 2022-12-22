@@ -13,6 +13,7 @@ if ( !defined('BOOTSTRAP') ) { die('Access denied'); }
 
 use Tygh\Registry;
 use Tygh\Languages\Languages;
+use Tygh\BlockManager\Block;
 use Tygh\Tools\SecurityHelper;
 
 function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $items_per_page = 0)
@@ -61,7 +62,7 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
         '?:department_images.department_image_id',
     );
 
-    $join .= db_quote(' LEFT JOIN ?:department_names ON ?:department_names.name_id = ?:departments.department_id AND ?:department_names.lang_code = ?s', $lang_code);
+    $join .= db_quote(' LEFT JOIN ?:department_names ON ?:department_names.department_id = ?:departments.department_id AND ?:department_names.lang_code = ?s', $lang_code);
     $join .= db_quote(' LEFT JOIN ?:department_descriptions ON ?:department_descriptions.department_id = ?:departments.department_id AND ?:department_descriptions.lang_code = ?s', $lang_code);
     $join .= db_quote(' LEFT JOIN ?:department_images ON ?:department_images.department_id = ?:departments.department_id AND ?:department_images.lang_code = ?s', $lang_code);
 
@@ -121,6 +122,33 @@ function fn_get_department_data($department_id, $lang_code = CART_LANGUAGE)
     }
 
     return $department;
+}
+
+/**
+ * Deletes department and all related data
+ *
+ * @param int $department_id Banner identificator
+ */
+function fn_delete_department_by_id($department_id)
+{
+    if (!empty($department_id) && fn_check_company_id('departments', 'department_id', $department_id)) {
+        db_query("DELETE FROM ?:departments WHERE department_id = ?i", $department_id);
+        db_query("DELETE FROM ?:department_descriptions WHERE department_id = ?i", $department_id);
+        db_query("DELETE FROM ?:department_names WHERE department_id = ?i", $department_id);
+        db_query("DELETE FROM ?:department_employee WHERE department_id = ?i", $department_id);
+
+        fn_set_hook('delete_departments', $department_id);
+
+        Block::instance()->removeDynamicObjectData('departments', $department_id);
+
+        $department_images_ids = db_get_fields("SELECT department_image_id FROM ?:department_images WHERE department_id = ?i", $department_id);
+
+        foreach ($department_images_ids as $department_image_id) {
+            fn_delete_image_pairs($department_image_id, 'logos');
+        }
+
+        db_query("DELETE FROM ?:department_images WHERE department_id = ?i", $department_id);
+    }
 }
 
 /**
@@ -200,11 +228,23 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
         }
 
     } else {
+        $data["timestamp"] = TIME;
+
         $department_id = $data['department_id'] = db_query("REPLACE INTO ?:departments ?e", $data);
+
+        $employees = [];
+        foreach (explode(",", $data["employee_ids"]) as $employee_id) {
+            $employees[] = [
+                "user_id" => $employee_id,
+                "department_id" => $department_id,
+            ];
+        }
 
         foreach (Languages::getAll() as $data['lang_code'] => $v) {
             db_query("REPLACE INTO ?:department_descriptions ?e", $data);
+            db_query("REPLACE INTO ?:department_names ?e", $data);
         }
+        db_query("REPLACE INTO ?:department_employee ?m", $employees);
 
         if (fn_departments_need_image_update()) {
             $department_image_id = db_get_next_auto_increment_id('department_images');
