@@ -21,12 +21,20 @@
                     <table class="table table-middle table--relative table-responsive">
                         <thead data-ca-bulkedit-default-object="true" data-ca-bulkedit-component="defaultObject">
                             <tr>
+                                <th width="6%" class="left mobile-hide">
+                                    {include file="common/check_items.tpl" is_check_disabled=!$has_permission check_statuses=($has_permission) ? $department_statuses : '' }
+
+                                    <input type="checkbox" class="bulkedit-toggler hide"
+                                        data-ca-bulkedit-disable="[data-ca-bulkedit-default-object=true]"
+                                        data-ca-bulkedit-enable="[data-ca-bulkedit-expanded-object=true]" />
+                                </th>
                                 <th width="8%" class="table__column-without-title"></th>
                                 <th><a class="cm-ajax" href="{"`$c_url`&sort_by=name&sort_order=`$search.sort_order_rev`"|fn_url}"
                                         data-ca-target-id={$rev}>{__("name")}{if $search.sort_by === "name"}{$c_icon nofilter}{else}{$c_dummy nofilter}{/if}</a>
                                 </th>
-                                <th width="20%">
-                                    {__("creation_date")}
+                                <th width="20%"><a class="cm-ajax"
+                                        href="{"`$c_url`&sort_by=timestamp&sort_order=`$search.sort_order_rev`"|fn_url}"
+                                        data-ca-target-id={$rev}>{__("creation_date")}{if $search.sort_by === "timestamp"}{$c_icon nofilter}{/if}</a>
                                 </th>
 
                                 {hook name="departments:manage_header"}
@@ -40,10 +48,24 @@
                             </tr>
                         </thead>
                         {foreach from=$departments item=department}
-                            <tr class="cm-row-status-{$department.status|lower} cm-longtap-target" {if $has_permission}
-                                    data-ca-longtap-action="setCheckBox" data-ca-longtap-target="input.cm-item"
-                                data-ca-id="{$department.department_id}" {/if}>
+                            <tr class="cm-row-status-{$department.status|lower} cm-longtap-target"
+                                {if $has_permission}
+                                    data-ca-longtap-action="setCheckBox"
+                                    data-ca-longtap-target="input.cm-item"
+                                    data-ca-id="{$department.department_id}"
+                                {/if}
+                            >
+                            
                                 {$allow_save=$department|fn_allow_save_object:"departments"}
+
+                                {if $allow_save}
+                                    {$no_hide_input="cm-no-hide-input"}
+                                {else}
+                                    {$no_hide_input=""}
+                                {/if}
+                
+                                <td width="6%" class="left mobile-hide">
+                                    <input type="checkbox" name="department_ids[]" value="{$department.department_id}" class="cm-item {$no_hide_input} cm-item-status-{$department.status|lower} hide" /></td>
 
                                 <td width="8%" class="departments-list__image left">
                                     {include
@@ -89,11 +111,11 @@
             {/capture}
 
             {include file="common/context_menu_wrapper.tpl"
-                                form="departments_form"
-                                object="departments"
-                                items=$smarty.capture.departments_table
-                                has_permissions=$has_permission
-                            }
+                                                form="departments_form"
+                                                object="departments"
+                                                items=$smarty.capture.departments_table
+                                                has_permissions=$has_permission
+                                            }
         {else}
             <p class="no-items">{__("no_data")}</p>
         {/if}
