@@ -109,7 +109,7 @@ function fn_get_department_data($department_id, $lang_code = CART_LANGUAGE)
     if (!empty($department)) {
         $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'logos', 'M', true, false, $lang_code);
         $department['supervisor_data'] = !empty($department['supervisor_id']) ? fn_get_user_short_info($department['supervisor_id']) : [];
-        $department['employee_ids'] = array_keys(fn_get_department_employees($department['department_id']));
+        $department['employee_ids'] = fn_get_department_employee_ids($department['department_id']);
     }
 
     return $department;
@@ -175,22 +175,14 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
         
         $department_employee_ids = explode(",", $data["employee_ids"]);
         db_query("DELETE FROM ?:department_employee WHERE department_id = ?i AND user_id NOT IN (?n)", $department_id, $department_employee_ids);
-        $existing_employees = db_get_array("SELECT user_id FROM ?:department_employee WHERE department_id = ?i", $department_id);
-        $existing_employee_ids = [];
-        foreach ($existing_employees as $employee) {
-            $existing_employee_ids[] = $employee["id"];
-        }
+        $existing_employee_ids = fn_get_department_employee_ids($department_id);
         $new_department_employees = [];
         foreach ($department_employee_ids as $employee_id) {
-            if (in_array($employee_id, $existing_employee_ids)) continue;
-            $new_department_employees[] = [
-                "user_id" => $employee_id,
-                "department_id" => $department_id,
-            ];
+            if (!in_array($employee_id, $existing_employee_ids)) {
+                $new_department_employees[] = $employee_id;
+            }
         }
-        if (!empty($new_department_employees)) {
-            db_query("INSERT INTO ?:department_employee ?m ", $new_department_employees);
-        }
+        fn_add_department_employees($department_id, $new_department_employees);
 
         $department_image_id = fn_get_department_image_id($department_id, $lang_code);
         $department_image_exist = !empty($department_image_id);
@@ -295,6 +287,28 @@ function fn_get_department_employees($department_id)
     return db_get_hash_array(
         "SELECT ?p FROM ?:department_employee " .
         "WHERE 1 ?p",
-        'user_id', "?:department_employee.user_id", $condition
+        "user_id", "?:department_employee.user_id", $condition
     );
+}
+
+function fn_get_department_employee_ids($department_id)
+{
+    return array_keys(
+        fn_get_department_employees($department_id),
+    );
+}
+
+function fn_add_department_employees($department_id, $employee_ids)
+{
+    if (empty($employee_ids)) {
+        return;
+    }
+    $employees = [];
+    foreach ($employee_ids as $employee_id) {
+        $employees[] = [
+            "user_id" => $employee_id,
+            "department_id" => $department_id,
+        ];
+    }
+    return db_query("REPLACE INTO ?:department_employee ?m ", $employees);
 }
