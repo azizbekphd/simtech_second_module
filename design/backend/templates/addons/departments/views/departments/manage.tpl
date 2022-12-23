@@ -14,6 +14,7 @@
         {$department_statuses=""|fn_get_default_statuses:true}
         {$has_permission = fn_check_permissions("departments", "update_status", "admin", "POST")}
         {$image_width = $settings.Thumbnails.product_admin_mini_icon_width}
+        {$image_height = $settings.Thumbnails.product_admin_mini_icon_height}
 
         {if $departments}
             {capture name="departments_table"}

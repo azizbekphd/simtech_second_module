@@ -73,7 +73,8 @@
                             input_name="department_data[employee_ids]"
                             item_ids=$department.employee_ids
                             but_text=__("departments.add_employees")
-                            extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"}
+                            extra_url="&for_departments=&exclude_user_types[]=A&exclude_user_types[]=V"
+                            no_item_text=__("departments.no_employees_defined")}
                 </div>
             </div>
 

@@ -51,3 +51,7 @@ msgstr "Add employees"
 msgctxt "Languages::departments.upd_date"
 msgid "Update date"
 msgstr "Update date"
+
+msgctxt "Languages::departments.no_employees_defined"
+msgid "No employees defined"
+msgstr "No employees defined"
