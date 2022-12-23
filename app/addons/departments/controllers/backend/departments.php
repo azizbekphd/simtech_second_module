@@ -29,9 +29,6 @@ if ($_SERVER['REQUEST_METHOD']	== 'POST') {
         $status_to = (string) $_REQUEST['status'];
 
         foreach ($_REQUEST['department_ids'] as $department_id) {
-            if (!fn_check_company_id('departments', 'department_id', $department_id)) {
-                continue;
-            }
             fn_tools_update_status([
                 'table'             => 'departments',
                 'status'            => $status_to,
