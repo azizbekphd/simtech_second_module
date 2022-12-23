@@ -1,13 +1,4 @@
 <?php
-/*
-* © 2022 CS-Cart.ie
-* 
-* PLEASE READ THE FULL TEXT  OF THE SOFTWARE  LICENSE   AGREEMENT  
-* IN  THE "LICENSE.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE. 
-* 
- * @website: www.cs-cart.ie
-*  
-*/
 
 if ( !defined('BOOTSTRAP') ) { die('Access denied'); }
 
@@ -171,7 +162,7 @@ function fn_departments_need_image_update()
 
 function fn_departments_update_department($data, $department_id, $lang_code = DESCR_SL)
 {
-    SecurityHelper::sanitizeObjectData('logos', $data);
+    SecurityHelper::sanitizeObjectData('department', $data);
 
     $data['upd_timestamp'] = TIME;
 
@@ -283,6 +274,18 @@ function fn_departments_image_all_links($department_id, $pair_data, $main_lang_c
 function fn_get_department_image_id($department_id, $lang_code = DESCR_SL)
 {
     return db_get_field("SELECT department_image_id FROM ?:department_images WHERE department_id = ?i AND lang_code = ?s", $department_id, $lang_code);
+}
+
+//
+// Get department name
+//
+function fn_get_department_name($department_id, $lang_code = CART_LANGUAGE)
+{
+    if (!empty($department_id)) {
+        return db_get_field("SELECT `name` FROM ?:department_names WHERE department_id = ?i AND lang_code = ?s", $department_id, $lang_code);
+    }
+
+    return false;
 }
 
 function fn_get_department_employees($department_id)
