@@ -280,21 +280,14 @@ function fn_get_department_name($department_id, $lang_code = CART_LANGUAGE)
     return false;
 }
 
-function fn_get_department_employees($department_id)
+function fn_get_department_employee_ids($department_id)
 {
     $condition = db_quote("AND department_id = ?i", $department_id);
 
-    return db_get_hash_array(
+    return db_get_fields(
         "SELECT ?p FROM ?:department_employee " .
         "WHERE 1 ?p",
-        "user_id", "?:department_employee.user_id", $condition
-    );
-}
-
-function fn_get_department_employee_ids($department_id)
-{
-    return array_keys(
-        fn_get_department_employees($department_id),
+        "?:department_employee.user_id", $condition
     );
 }
 
