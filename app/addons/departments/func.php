@@ -71,7 +71,7 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
 
     if (!empty($departments)) {
         foreach ($departments as &$department) {
-            $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'logos', 'M', true, false, $lang_code);
+            $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'department_logos', 'M', true, false, $lang_code);
         }
     }
 
@@ -107,7 +107,7 @@ function fn_get_department_data($department_id, $lang_code = CART_LANGUAGE)
     $department = db_get_row("SELECT " . implode(", ", $fields) . " FROM ?:departments " . implode(" ", $joins) ." $condition");
 
     if (!empty($department)) {
-        $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'logos', 'M', true, false, $lang_code);
+        $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'department_logos', 'M', true, false, $lang_code);
         $department['supervisor_data'] = !empty($department['supervisor_id']) ? fn_get_user_short_info($department['supervisor_id']) : [];
         $department['employee_ids'] = fn_get_department_employee_ids($department['department_id']);
     }
@@ -135,7 +135,7 @@ function fn_delete_department_by_id($department_id)
         $department_images_ids = db_get_fields("SELECT department_image_id FROM ?:department_images WHERE department_id = ?i", $department_id);
 
         foreach ($department_images_ids as $department_image_id) {
-            fn_delete_image_pairs($department_image_id, 'logos');
+            fn_delete_image_pairs($department_image_id, 'department_logos');
         }
 
         db_query("DELETE FROM ?:department_images WHERE department_id = ?i", $department_id);
@@ -191,7 +191,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 
         if ($department_is_multilang) {
             if ($department_image_exist && $image_is_update) {
-                fn_delete_image_pairs($department_image_id, 'logos');
+                fn_delete_image_pairs($department_image_id, 'department_logos');
                 db_query("DELETE FROM ?:department_images WHERE department_id = ?i AND lang_code = ?s", $department_id, $lang_code);
                 $department_image_exist = false;
             }
@@ -204,7 +204,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
         if ($image_is_update && !$department_image_exist) {
             $department_image_id = db_query("INSERT INTO ?:department_images (department_id, lang_code) VALUE(?i, ?s)", $department_id, $lang_code);
         }
-        $pair_data = fn_attach_image_pairs('departments_main', 'logos', $department_image_id, $lang_code);
+        $pair_data = fn_attach_image_pairs('departments_main', 'department_logos', $department_image_id, $lang_code);
 
         if (!$department_is_multilang && !$department_image_exist) {
             fn_departments_image_all_links($department_id, $pair_data, $lang_code);
@@ -231,7 +231,7 @@ function fn_departments_update_department($data, $department_id, $lang_code = DE
 
         if (fn_departments_need_image_update()) {
             $department_image_id = db_get_next_auto_increment_id('department_images');
-            $pair_data = fn_attach_image_pairs('departments_main', 'logos', $department_image_id, $lang_code);
+            $pair_data = fn_attach_image_pairs('departments_main', 'department_logos', $department_image_id, $lang_code);
             if (!empty($pair_data)) {
                 $data_department_image = array(
                     'department_image_id' => $department_image_id,

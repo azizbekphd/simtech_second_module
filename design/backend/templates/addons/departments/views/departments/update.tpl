@@ -33,7 +33,7 @@
                 <div class="controls">
                     {include file="common/attach_images.tpl"
                             image_name="departments_main"
-                            image_object_type="logos"
+                            image_object_type="department_logos"
                             image_pair=$department.main_pair
                             image_object_id=$id
                             no_detailed=true
