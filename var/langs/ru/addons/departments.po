@@ -55,3 +55,11 @@ msgstr "Дата обновления"
 msgctxt "Languages::departments.no_employees_defined"
 msgid "No employees defined"
 msgstr "Сотрудники не заданы"
+
+msgctxt "Languages::departments.title"
+msgid "Departments"
+msgstr "Отделы"
+
+msgctxt "Languages::departments.departments_not_found"
+msgid "Departments not found"
+msgstr "Отделы не найдены"
