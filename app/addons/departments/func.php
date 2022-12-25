@@ -72,6 +72,8 @@ function fn_get_departments($params = array(), $lang_code = CART_LANGUAGE, $item
     if (!empty($departments)) {
         foreach ($departments as &$department) {
             $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'department_logos', 'M', true, false, $lang_code);
+            if (AREA != 'C') continue;
+            $department['supervisor_data'] = !empty($department['supervisor_id']) ? fn_get_user_short_info($department['supervisor_id']) : [];
         }
     }
 
@@ -110,6 +112,12 @@ function fn_get_department_data($department_id, $lang_code = CART_LANGUAGE)
         $department['main_pair'] = fn_get_image_pairs($department['department_image_id'], 'department_logos', 'M', true, false, $lang_code);
         $department['supervisor_data'] = !empty($department['supervisor_id']) ? fn_get_user_short_info($department['supervisor_id']) : [];
         $department['employee_ids'] = fn_get_department_employee_ids($department['department_id']);
+        if (AREA == 'C') {
+            $department['employees'] = [];
+            foreach ($department['employee_ids'] as $employee_id) {
+                $department['employees'][] = fn_get_user_short_info($employee_id);
+            }
+        }
     }
 
     return $department;

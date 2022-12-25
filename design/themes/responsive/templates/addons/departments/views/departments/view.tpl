@@ -30,8 +30,8 @@
                                 <div class="ty-grid-list__image">
                                     <a href={"departments.details?department_id={$department.department_id}"|fn_url}>
                                     {include
-                                        file="common/image.tpl" no_ids=true
-                                        image=$department.main_pair
+                                        file="common/image.tpl"
+                                        images=$department.main_pair.icon|default:$department.main_pair.detailed
                                         image_id=$departments.main_pair.image_id
                                         image_width=$image_width
                                         image_height=$image_height}
@@ -42,6 +42,10 @@
                                     <bdi>
                                         <a href="{"departments.details?department_id={$department.department_id}"|fn_url}" class="department-title" title="{$department.name}">{$department.name}</a>
                                     </bdi>
+                                </div>
+                                <div class="ty-grid-list__supervisor">
+                                    {$department.supervisor_data.firstname}&nbsp;
+                                    {$department.supervisor_data.lastname}
                                 </div>
                             </div>
                         {/if}
