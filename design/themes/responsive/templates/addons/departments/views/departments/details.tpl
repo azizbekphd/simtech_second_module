@@ -1,0 +1,3 @@
+{if $department}
+    Yes
+{/if}
