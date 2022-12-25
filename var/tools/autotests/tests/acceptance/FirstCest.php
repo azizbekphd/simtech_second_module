@@ -12,7 +12,7 @@ class FirstCest
         $I->click(['xpath' => '//*[@id="tygh_main_container"]/div[3]/div/div[2]/div[1]/div/div/div/form/div[3]/div[1]/button']);
 
         $I->amOnPage('/index.php?dispatch=departments.view');
-        $I->seeElement(['xpath' => '/html/body/div[1]/div[4]/div[3]/div/div[2]/div/div/div/div/div/div[1]/div/div[1]/a/img']);
+        $I->seeElement(['xpath' => '//*[@id="pagination_contents"]/div/div[1]/div/div[1]/a/img']);
         $I->see('Department 1');
         $I->see('Admin Admin');
 
