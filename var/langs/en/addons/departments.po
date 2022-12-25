@@ -24,6 +24,10 @@ msgctxt "Languages::department"
 msgid "Department"
 msgstr "Department"
 
+msgctxt "Languages::departments"
+msgid "Departments"
+msgstr "Departments"
+
 msgctxt "Languages::add_department"
 msgid "Add department"
 msgstr "Add department"
