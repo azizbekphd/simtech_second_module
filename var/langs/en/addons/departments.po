@@ -1,0 +1,69 @@
+msgid ""
+msgstr "Project-Id-Version: tygh"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+
+msgctxt "LanguageName"
+msgid "Localized language name"
+msgstr "English"
+
+msgctxt "Addons::name::departments"
+msgid "Departments"
+msgstr "Departments"
+
+msgctxt "Addons::description::departments"
+msgid "Allows you to control departments."
+msgstr "Allows you to control departments."
+
+msgctxt "Languages::departments_menu_description"
+msgid "Allows you to control departments."
+msgstr "Allows you to control departments."
+
+msgctxt "Languages::department"
+msgid "Department"
+msgstr "Department"
+
+msgctxt "Languages::departments"
+msgid "Departments"
+msgstr "Departments"
+
+msgctxt "Languages::add_department"
+msgid "Add department"
+msgstr "Add department"
+
+msgctxt "Languages::departments.new_department"
+msgid "New department"
+msgstr "New department"
+
+msgctxt "Languages::departments.supervisor"
+msgid "Supervisor"
+msgstr "Supervisor"
+
+msgctxt "Languages::departments.select_supervisor"
+msgid "Select supervisor"
+msgstr "Select supervisor"
+
+msgctxt "Languages::departments.employees"
+msgid "Employees"
+msgstr "Employees"
+
+msgctxt "Languages::departments.add_employees"
+msgid "Add employees"
+msgstr "Add employees"
+
+msgctxt "Languages::departments.upd_date"
+msgid "Update date"
+msgstr "Update date"
+
+msgctxt "Languages::departments.no_employees_defined"
+msgid "No employees defined"
+msgstr "No employees defined"
+
+msgctxt "Languages::departments.title"
+msgid "Departments"
+msgstr "Departments"
+
+msgctxt "Languages::departments.departments_not_found"
+msgid "Departments not found"
+msgstr "Departments not found"
