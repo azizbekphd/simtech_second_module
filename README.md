@@ -164,3 +164,32 @@ Some test cases for manual testing
 ### Actual result:
 
 - All departments are displayed in one column
+
+## **How to run autotests**
+
+1. Open root directory of the shop in the terminal
+1. Go to autotests folder:
+    ```
+    cd var/tools/autotests
+    ```
+1. Install Codeception:
+    ```
+    composer require "codeception/codeception" --dev
+    ```
+1. Create configuration file:
+    ```
+    php vendor/bin/codecept bootstrap
+    ```
+1. Put application URL into `tests/acceptance.suite.yml`:
+    ```
+    ...
+    - PhpBrowser:
+        url: {YOUR APP'S URL}
+    - \Helper\Acceptance
+    ...
+    ```
+1. Make sure you have a department with name "Department 1", with supervisor with full name "Admin Admin" and with two employees with full names "Customer Customer" and "Customer2 Customer2"
+1. Run the autotest:
+    ```
+    php vendor/bin/codecept run --steps
+    ```
